@@ -1,0 +1,26 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.6)
+    clearbit (0.1.0)
+      nestful (~> 1.0.7)
+    faraday (0.9.0)
+      multipart-post (>= 1.2, < 3)
+    faraday-http-cache (0.4.2)
+      faraday (~> 0.8)
+    multipart-post (2.0.0)
+    nestful (1.0.7)
+    octokit (3.5.2)
+      sawyer (~> 0.5.3)
+    sawyer (0.5.5)
+      addressable (~> 2.3.5)
+      faraday (~> 0.8, < 0.10)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  clearbit
+  faraday
+  faraday-http-cache
+  octokit (~> 3.0)
