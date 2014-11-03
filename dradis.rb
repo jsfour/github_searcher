@@ -17,8 +17,8 @@ class Dradis
   end
 
   def scan_all
+    #TODO: add minimum number of repos.
     @results = []
-    query = build_query
     @geos.each do |geo|
       @languages.each do |lang|
         @results << @client.search_users(build_query(location: geo, language: lang, type: "user"))
