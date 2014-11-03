@@ -16,6 +16,7 @@ def run! geo, languages
   finder = Dradis.new(github_token, geo, languages, log)
   res = finder.scan_all
   users = finder.collate(res)
+  users = users.uniq{|i| i.login}
   users = finder.parse(users)
   enriched_users = users.map do |i|
     i.extend(UserExtention)
