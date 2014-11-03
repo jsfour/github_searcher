@@ -67,4 +67,4 @@ Run the script. The output will appear in "names.csv"
 ```
 
 #### Disclaimer:
-This script can be used for evil but it is not meant to be so please use it responsibly. Be cool, don't be an asshole.
+This script can be used for evil but please use it responsibly. Be cool, don't be an asshole.
