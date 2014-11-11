@@ -1,3 +1,4 @@
 *.csv
+*.xls
 *.log
 config.yml
