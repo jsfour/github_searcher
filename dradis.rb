@@ -10,7 +10,7 @@ class Dradis
     Octokit.middleware = stack
     @client = Octokit::Client.new(:access_token => token)
     @geos, @languages = geos, languages
-    @api_sleep_time = 1
+    @api_sleep_time = 60
     @users_found = []
     @encoding_problems = []
     @rate_limited = []
@@ -21,7 +21,21 @@ class Dradis
     @results = []
     @geos.each do |geo|
       @languages.each do |lang|
-        @results << @client.search_users(build_query(location: geo, language: lang, type: "user"))
+        retries = 0
+        retry_limit = 3
+        begin
+          result = @client.search_users(build_query(location: geo, language: lang, type: "user"))
+          @results << result
+        rescue Octokit::TooManyRequests
+          if retries < retry_limit
+            @log.error "Rate Limited sleeping for #{@api_sleep_time}..."
+            sleep(@api_sleep_time)
+            retries += 1
+            retry
+          else
+            @log.error "Retry limit exceded moving on..."
+          end
+        end
       end
     end
     return @results

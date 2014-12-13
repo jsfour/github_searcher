@@ -5,12 +5,14 @@ require 'faraday-http-cache'
 require 'logger'
 require 'csv'
 require './dradis'
-require './user_extention'
+require './enrichment_strapon'
 require 'yaml'
 
 
 def run! geo, languages
   log = Logger.new("processor.log", "weekly")
+  languages = languages.uniq
+  geo = geo.uniq
   log.info "New Job Starting ***************"
   github_token = ENV["github_token"]
   finder = Dradis.new(github_token, geo, languages, log)
@@ -20,8 +22,11 @@ def run! geo, languages
   users = finder.parse(users)
   enriched_users = users.map do |i|
     i.extend(UserExtention)
-    i.enrich
-    log.info i.login + " enriched"
+    if i.enrich.empty?
+      log.info i.login + " didnt have data"
+    else
+      log.info i.login + " enriched"
+    end
     i
   end
   write_csv(enriched_users)
@@ -59,7 +64,8 @@ def write_csv users
         user.followers,
         user.enrich.fetch("linkedin"){Hash.new}.fetch("handle"){""},
         user.enrich.fetch("twitter"){Hash.new}.fetch("handle"){""}, 
-        user.enrich.fetch("twitter"){Hash.new}.fetch("followers"){""}
+        user.enrich.fetch("twitter"){Hash.new}.fetch("followers"){""},
+        user.enrich.fetch("twitter"){Hash.new}.fetch("bio"){""}
       ]
     end
   end
@@ -73,9 +79,13 @@ geos = [
   "El Segundo"
 ]
 languages = [
-  "ruby",
   "rails",
-  "Rails",
+  "backbone",
+  "rails",
+  "less",
+  "ruby",
+  "python",
+  "d3.js",
   "node",
   "ember",
   "javascript"

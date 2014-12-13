@@ -1,10 +1,10 @@
 require 'clearbit'
   
-module UserExtention
+module EnrichmentStrapon
 
   Clearbit.key = ENV["clearbit_token"]
 
-  def enrich 
+  def enrich
     if !self.email.nil? and @enrich.nil?
       begin
         @enrich = Clearbit::Person[email: self.email]
