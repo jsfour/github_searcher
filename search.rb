@@ -21,7 +21,8 @@ def run! geo, languages
   users = users.uniq{|i| i.login}
   users = finder.parse(users)
   enriched_users = users.map do |i|
-    i.extend(UserExtention)
+    i.extend(EnrichmentStrapon)
+    i.clearbit_key = ENV["clearbit_token"]
     if i.enrich.empty?
       log.info i.login + " didnt have data"
     else
@@ -43,12 +44,12 @@ def write_csv users
       "blog",
       "location",
       "email",
-      "bio",
       "github-public_repos",
       "github-followers",
       "linkedin",
       "twitter",
-      "twitter-followers"
+      "twitter-followers",
+      "bio"
     ]
     users.each do |user|
       csv << [
@@ -59,7 +60,6 @@ def write_csv users
         user.blog,
         user.location,
         user.email,
-        user.bio,
         user.public_repos,
         user.followers,
         user.enrich.fetch("linkedin"){Hash.new}.fetch("handle"){""},

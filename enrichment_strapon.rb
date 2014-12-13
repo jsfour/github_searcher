@@ -2,7 +2,9 @@ require 'clearbit'
   
 module EnrichmentStrapon
 
-  Clearbit.key = ENV["clearbit_token"]
+  def clearbit_key=(key)
+    Clearbit.key = key
+  end
 
   def enrich
     if !self.email.nil? and @enrich.nil?
